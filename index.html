@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do App</title>
+  <style>
+    .todo-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    button {
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>To-Do List</h1>
+  <input type="text" id="todoInput" placeholder="Enter a new task">
+  <button onclick="addTodo()">Add Task</button>
+  <ul id="todoList"></ul>
+
+  <script>
+    
+    function loadTodos() {
+      const todoList = document.getElementById('todoList');
+      todoList.innerHTML = ''; 
+
+      const todos = JSON.parse(localStorage.getItem('todos')) || [];
+      todos.forEach((todo, index) => {
+        const li = document.createElement('li');
+        li.className = 'todo-item';
+        li.innerHTML = `
+          <span>${todo}</span>
+          <button onclick="deleteTodo(${index})">Delete</button>
+        `;
+        todoList.appendChild(li);
+      });
+    }
+
+    // Function to add a new todo
+    function addTodo() {
+      const todoInput = document.getElementById('todoInput');
+      const newTodo = todoInput.value.trim();
+
+      if (newTodo) {
+        const todos = JSON.parse(localStorage.getItem('todos')) || [];
+        todos.push(newTodo);
+        localStorage.setItem('todos', JSON.stringify(todos));
+        todoInput.value = '';
+        loadTodos();
+      } else {
+        alert('Please enter a task.');
+      }
+    }
+    function deleteTodo(index) {
+      const todos = JSON.parse(localStorage.getItem('todos')) || [];
+      todos.splice(index, 1); 
+      localStorage.setItem('todos', JSON.stringify(todos));
+      loadTodos();
+    }
+
+    
+    loadTodos();
+  </script>
+</body>
+</html>
